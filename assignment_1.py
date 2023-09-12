@@ -6,7 +6,7 @@ from scipy.linalg import svd
 import seaborn as sns
 
 # Set the path of the raw data
-path_name = "/Users/giovanniorzalesi/Desktop/Machine Learning/water_potability.csv"
+path_name = "./water_potability.csv"
 
 # Load data file (Water Potability)
 df = pd.read_csv(path_name)
@@ -28,3 +28,7 @@ sns.distplot(df["ph"])
 plt.subplot(1,2,2)
 sns.distplot(df["Hardness"])
 plt.show()
+
+# Histogram of attributes
+print("Histogram of attributes")
+print(df.hist())
