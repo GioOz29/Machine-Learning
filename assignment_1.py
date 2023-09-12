@@ -5,7 +5,7 @@ from matplotlib.pyplot import figure, plot, title, xlabel, ylabel, show, legend
 from scipy.linalg import svd
 import seaborn as sns
 
-# Set the path of the raw data
+# Set the path of the raw data    killme
 path_name = "./water_potability.csv"
 
 # Load data file (Water Potability)
