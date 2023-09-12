@@ -1,45 +1,71 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.pyplot import figure, plot, title, xlabel, ylabel, show, legend
-from scipy.linalg import svd
 import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
 
-# Set the path of the raw data
 path_name = "./water_potability.csv"
 
-# Load data file (Water Potability)
+# Load the CSV file into a DataFrame
 df = pd.read_csv(path_name)
-attributesNames = np.asarray(df.columns) # Just the name of the attributes
 
-# Show the content of the dataframe
-print("Show content of the dataframe")
-print(df)
+# Display the first few rows of the DataFrame
+print(df.head())
 
-# Miss data analysis check for NA observations
-print("Count of NA observations (0 means no NA in variable)")
-print(df.isnull().sum())
-
-# Outlier detection
-import warnings
-warnings.filterwarnings("ignore")
-plt.figure(figsize=(16,5))
-plt.subplot(1,2,1)
-sns.distplot(df["ph"])
-plt.subplot(1,2,2)
-sns.distplot(df["Hardness"])
+# Visualize the distribution of each attribute
+sns.pairplot(df, hue='Potability', diag_kind='kde')
 plt.show()
 
-# Histogram of attributes
-print("Histogram of attributes")
-print(df.hist())
+# Check for outliers using box plots
+plt.figure(figsize=(12, 6))
+sns.boxplot(data=df)
+plt.xticks(rotation=90)
+plt.show()
 
+# Check the normality of each attribute
+plt.figure(figsize=(12, 6))
+for column in df.columns[:-1]:  # Exclude the 'Potability' column
+    sns.histplot(df[column], kde=True)
+    plt.title(f'Distribution of {column}')
+    plt.show()
+    
 # Calculate the correlation matrix
 correlation_matrix = df.corr()
 
-# Create a heatmap to visualize the correlation matrix
+# Visualize the correlation matrix using a heatmap
 plt.figure(figsize=(10, 8))
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
-plt.title('Correlation Heatmap')
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm')
+plt.title('Correlation Matrix')
+plt.show()
+
+# Separate features and target variable
+X = df.drop('Potability', axis=1)
+y = df['Potability']
+
+# Standardize the features
+scaler = StandardScaler()
+X_standardized = scaler.fit_transform(X)
+
+# Perform PCA
+pca = PCA()
+X_pca = pca.fit_transform(X_standardized)
+
+# Explained variance ratio
+explained_variance_ratio = pca.explained_variance_ratio_
+
+# Plot explained variance ratio
+plt.figure(figsize=(8, 4))
+plt.plot(range(1, len(explained_variance_ratio) + 1), explained_variance_ratio, marker='o', linestyle='--')
+plt.xlabel('Number of Components')
+plt.ylabel('Explained Variance Ratio')
+plt.title('Explained Variance Ratio vs. Number of Components')
+plt.show()
+
+# Visualize the first two principal components
+plt.figure(figsize=(8, 6))
+sns.scatterplot(x=X_pca[:, 0], y=X_pca[:, 1], hue=y)
+plt.xlabel('Principal Component 1')
+plt.ylabel('Principal Component 2')
+plt.title('PCA: Principal Component 1 vs. Principal Component 2')
 plt.show()
 
