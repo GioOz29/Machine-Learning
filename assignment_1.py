@@ -12,10 +12,6 @@ df = pd.read_csv(path_name)
 # Display the first few rows of the DataFrame
 print(df.head())
 
-# Visualize the distribution of each attribute
-sns.pairplot(df, hue='Potability', diag_kind='kde')
-plt.show()
-
 # Check for outliers using box plots
 plt.figure(figsize=(12, 6))
 sns.boxplot(data=df)
