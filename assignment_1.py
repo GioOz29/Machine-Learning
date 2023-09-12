@@ -9,6 +9,9 @@ path_name = "./water_potability.csv"
 # Load the CSV file into a DataFrame
 df = pd.read_csv(path_name)
 
+# Remove rows with missing values in any column
+df = df.dropna(how='any').reset_index(drop=True)
+
 # Display the first few rows of the DataFrame
 print(df.head())
 
