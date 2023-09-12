@@ -10,6 +10,7 @@ path_name = "./water_potability.csv"
 
 # Load data file (Water Potability)
 df = pd.read_csv(path_name)
+attributesNames = np.asarray(df.columns) # Just the name of the attributes
 
 # Show the content of the dataframe
 print("Show content of the dataframe")
@@ -41,3 +42,4 @@ plt.figure(figsize=(10, 8))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
 plt.title('Correlation Heatmap')
 plt.show()
+
