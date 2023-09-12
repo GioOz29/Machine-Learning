@@ -32,3 +32,12 @@ plt.show()
 # Histogram of attributes
 print("Histogram of attributes")
 print(df.hist())
+
+# Calculate the correlation matrix
+correlation_matrix = df.corr()
+
+# Create a heatmap to visualize the correlation matrix
+plt.figure(figsize=(10, 8))
+sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
+plt.title('Correlation Heatmap')
+plt.show()
