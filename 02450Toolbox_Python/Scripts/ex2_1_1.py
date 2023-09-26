@@ -3,7 +3,7 @@ import numpy as np
 import xlrd
 
 # Load xls sheet with data
-doc = xlrd.open_workbook('../Data/nanonose.xls').sheet_by_index(0)
+doc = xlrd.open_workbook('/Users/giovanniorzalesi/Desktop/Machine Learning/02450Toolbox_Python/Data/nanonose.xls').sheet_by_index(0)
 
 # Extract attribute names (1st row, column 4 to 12)
 attributeNames = doc.row_values(0, 3, 11)
