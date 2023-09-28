@@ -8,13 +8,15 @@ from scipy.io import loadmat
 # matlab variable names, and values to arrays representing matlab matrices.
 
 # Load Matlab data file to python dict structure
-iris_mat = loadmat('/Users/giovanniorzalesi/Desktop/Machine Learning/02450Toolbox_Python/Data/iris.mat', squeeze_me=True)
+iris_mat = loadmat('./02450Toolbox_Python/Data/iris.mat', squeeze_me=True)
 # The argument squeeze_me ensures that there the variables we get from the 
 # MATLAB filed are not stored within "unneeded" array dimensions.
 
 # You can check which variables are in the loaded dict by calling
 # the function keys() for the dict:
-#mat_data.keys()
+# mat_data.keys()
+# print(iris_mat.keys())
+
 # this will tell you that X, y, M, N and C are stored in the dictionary,
 # as well as some extra information about e.g. the used MATLAB version.
 
@@ -24,7 +26,7 @@ y = iris_mat['y']
 M = iris_mat['M']
 N = iris_mat['N']
 C = iris_mat['C']
-print(C)
+# print(C)
 attributeNames = iris_mat['attributeNames']
 classNames = iris_mat['classNames']
 

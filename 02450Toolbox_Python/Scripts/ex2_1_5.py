@@ -16,10 +16,10 @@ N,M = X.shape
 pcs = [0,1,2]
 legendStrs = ['PC'+str(e+1) for e in pcs]
 c = ['r','g','b']
-bw = .2
-r = np.arange(1,M+1)
+bw = .2 # bar width
+r = np.arange(1,M+1) # bar centers
 for i in pcs:    
-    plt.bar(r+i*bw, V[:,i], width=bw)
+    plt.bar(r+i*bw, V[:,i], width=bw) #
 plt.xticks(r+bw, attributeNames)
 plt.xlabel('Attributes')
 plt.ylabel('Component coefficients')
@@ -38,7 +38,7 @@ print(V[:,1].T)
 # Looking at the data for water:
 
 # Projection of water class onto the 2nd principal component.
-all_water_data = Y[y==4,:]
+all_water_data = Y[y==4,:] # extract water data one out of key encoding
 
 print('First water observation')
 print(all_water_data[0,:])

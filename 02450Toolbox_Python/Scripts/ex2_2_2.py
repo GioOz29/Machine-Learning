@@ -7,32 +7,38 @@ import scipy.linalg as linalg
 import numpy as np
 
 # Digits to include in analysis (to include all, n = range(10) )
-n = [0,1]
+# n = [0,1]
+n = 8
 # Number of principal components for reconstruction
-K = 16
+K = 10 #16
 # Digits to visualize
 nD = range(6)
 
 
 # Load Matlab data file to python dict structure
 # and extract variables of interest
-traindata = loadmat('../Data/zipdata.mat')['traindata']
+traindata = loadmat('./02450Toolbox_Python/Data/zipdata.mat')['traindata']
 X = traindata[:,1:]
 y = traindata[:,0]
 
 N,M = X.shape
-C = len(n)
+# C = len(n)
+C = 1
 
 classValues = n
-classNames = [str(num) for num in n]
-classDict = dict(zip(classNames,classValues))
+# classNames = [str(num) for num in n]
+classNames = str(n)
+# classDict = dict(zip(classNames,classValues))
+classDict = {classNames: classValues}
 
 
 # Select subset of digits classes to be inspected
 class_mask = np.zeros(N).astype(bool)
-for v in n:
-    cmsk = (y == v)
-    class_mask = class_mask | cmsk
+# for v in n:
+#     cmsk = (y == v)
+#     class_mask = class_mask | cmsk
+cmsk = (y == n)
+class_mask = class_mask | cmsk
 X = X[class_mask,:]
 y = y[class_mask]
 N=X.shape[0]
@@ -62,10 +68,13 @@ ylabel('Variance explained value')
 # Plot PCA of the data
 f = figure()
 title('pixel vectors of handwr. digits projected on PCs')
-for c in n:
-    # select indices belonging to class c:
-    class_mask = (y == c)
-    plot(Z[class_mask,0], Z[class_mask,1], 'o')
+# for c in n:
+#     # select indices belonging to class c:
+#     class_mask = (y == c)
+#     plot(Z[class_ma
+# select indices belonging to class c:
+class_mask = (y == n)
+plot(Z[class_mask,0], Z[class_mask,1], 'o')
 legend(classNames)
 xlabel('PC1')
 ylabel('PC2')

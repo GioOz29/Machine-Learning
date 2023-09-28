@@ -14,23 +14,37 @@ j = 1
 # Make a simple plot of the i'th attribute against the j'th attribute
 # Notice that X is of matrix type (but it will also work with a numpy array)
 # X = np.array(X) #Try to uncomment this line
-plot(X[:, i], X[:, j], 'o')
+
+#iterate over i and j to plot all combinations of attributes
+def plotAll():
+    for i in range(0, 4):
+        for j in range(0, 4):
+            if i != j:
+                f = figure()
+                title('NanoNose data' + ' ' + str(i) + ' ' + str(j))
+                plot(X[:, i], X[:, j], 'o')
+                xlabel(attributeNames[i])
+                ylabel(attributeNames[j])
+                show()
+
+plotAll()
+# plot(X[:, i], X[:, j], 'o')
 
 # %%
 # Make another more fancy plot that includes legend, class labels, 
 # attribute names, and a title.
-f = figure()
-title('NanoNose data')
+# f = figure()
+# title('NanoNose data')
 
-for c in range(C):
-    # select indices belonging to class c:
-    class_mask = y==c
-    plot(X[class_mask,i], X[class_mask,j], 'o',alpha=.3)
+# for c in range(x):
+#     # select indices belonging to class c:
+#     class_mask = y==c
+#     plot(X[class_mask,i], X[class_mask,j], 'o',alpha=.3)
 
-legend(classNames)
-xlabel(attributeNames[i])
-ylabel(attributeNames[j])
+# legend(classNames)
+# xlabel(attributeNames[i])
+# ylabel(attributeNames[j])
 
 # Output result to screen
-show()
+# show()
 print('Ran Exercise 2.1.2')

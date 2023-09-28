@@ -12,19 +12,18 @@ plt.title('NanoNose: attribute standard deviations')
 
 ## Investigate how standardization affects PCA
 
-# Try this *later* (for last), and explain the effect
-#X_s = X.copy() # Make a to be "scaled" version of X
-#X_s[:, 2] = 100*X_s[:, 2] # Scale/multiply attribute C with a factor 100
+X_s = X.copy() # Make a to be "scaled" version of X
+X_s[:, 2] = 100*X_s[:, 2] # Scale/multiply attribute C with a factor 100
 # Use X_s instead of X to in the script below to see the difference.
 # Does it affect the two columns in the plot equally?
 
 
 # Subtract the mean from the data
-Y1 = X - np.ones((N, 1))*X.mean(0)
+Y1 = X_s - np.ones((N, 1))*X_s.mean(0)
 
 # Subtract the mean from the data and divide by the attribute standard
 # deviation to obtain a standardized dataset:
-Y2 = X - np.ones((N, 1))*X.mean(0)
+Y2 = X_s - np.ones((N, 1))*X_s.mean(0)
 Y2 = Y2*(1/np.std(Y2,0))
 # Here were utilizing the broadcasting of a row vector to fit the dimensions 
 # of Y2

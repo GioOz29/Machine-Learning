@@ -8,7 +8,7 @@ import pandas as pd
 # We start by defining the path to the file that we're we need to load.
 # Upon inspection, we saw that the messy_data.data was infact a file in the
 # format of a CSV-file with a ".data" extention instead.  
-file_path = '/Users/giovanniorzalesi/Desktop/Machine Learning/02450Toolbox_Python/Data/messy_data/messy_data.data'
+file_path = './02450Toolbox_Python/Data/messy_data/messy_data.data'
 # First of we simply read the file in using readtable, however, we need to
 # tell the function that the file is tab-seperated. We also need to specify
 # that the header is in the second row:
@@ -59,13 +59,30 @@ messy_data.displacement = messy_data.displacement.replace({'0': np.nan})
 # the value as missing. How would you add a line of code to this data
 # cleanup script to account for this information?
 
+# functiond that prints the messy_data variable to the console:
+def print_messy_data():
+    print(messy_data.to_string())
+
+# messy_data.mpg = messy_data.mpg.replace({99: np.nan})
+print_messy_data()
+
+# functions that taked in input a df and a column name, 
+# and checks if in column name there are any values ==99 and replaces them
+# with nan
+def replace_99_with_nan(df, column_name):
+     df.loc[df[column_name] == '99', column_name] = float('nan')
+     print_messy_data()
+
+replace_99_with_nan(messy_data, 'mpg')
+
+
 ## X,y-format
 # If the modelling problem of interest was a classification problem where
 # we wanted to classify the origin attribute, we could now identify obtain
 # the data in the X,y-format as so:
 data = np.array(messy_data.values, dtype=np.float64)
-X_c = data[:, :-1].copy()
-y_c = data[:, -1].copy()
+X_c = data[:, :-1].copy() #tutte le righe tranne tutte le colonne tranne l'ultima
+y_c = data[:, -1].copy()  #tutte le righe e solo l'ultima colonna
 
 # However, if the problem of interest was to model the MPG based on the
 # other attributes (a regression problem), then the X,y-format is
@@ -83,7 +100,7 @@ X_r = np.concatenate((X_r[:, :-1], origin_encoding),axis=1)
 # Since the README.txt doesn't supply a lot of information about what the
 # levels in the origin variable mean, you'd have to either make an educated
 # guess based on the values in the context, or preferably obtain the
-# information from any papers that might be references in the README.
+# information from any papers that might be referenced in the README.
 # In this case, you can inspect origin and car_names, to see that (north)
 # american makes are all value 0 (try looking at car_names[origin == 0],
 # whereas origin value 1 is European, and value 2 is Asian.

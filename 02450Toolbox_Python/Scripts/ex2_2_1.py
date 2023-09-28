@@ -7,7 +7,7 @@ import numpy as np
 i = 0
 
 # Load Matlab data file to python dict structure
-mat_data = loadmat('../Data/zipdata.mat')
+mat_data = loadmat('./02450Toolbox_Python/Data/zipdata.mat')
 
 # Extract variables of interest
 testdata = mat_data['testdata']
@@ -33,3 +33,5 @@ title('Digit as an image')
 show()
 
 print('Ran Exercise 2.2.1')
+
+exit()

@@ -19,17 +19,17 @@ attributeNames_c = attributeNames.copy();
 i = 1; j = 2;
 color = ['r','g', 'b']
 plt.title('Iris classification problem')
-for c in range(len(classNames)):
-    idx = y_c == c
-    plt.scatter(x=X_c[idx, i],
-                y=X_c[idx, j], 
-                c=color[c], 
-                s=50, alpha=0.5,
-                label=classNames[c])
-plt.legend()
-plt.xlabel(attributeNames_c[i])
-plt.ylabel(attributeNames_c[j])
-plt.show()
+# for c in range(len(classNames)):
+#     idx = y_c == c
+#     plt.scatter(x=X_c[idx, i],
+#                 y=X_c[idx, j], 
+#                 c=color[c], 
+#                 s=50, alpha=0.5,
+#                 label=classNames[c])
+# plt.legend()
+# plt.xlabel(attributeNames_c[i])
+# plt.ylabel(attributeNames_c[j])
+# plt.show()
 # Consider, for instance, if it would be possible to make a single line in
 # the plot to delineate any two groups? Can you draw a line between
 # the Setosas and the Versicolors? The Versicolors and the Virginicas?
@@ -41,6 +41,8 @@ plt.show()
 # other format in one data matrix:
 data = np.concatenate((X_c, np.expand_dims(y_c,axis=1)), axis=1)
 # We need to do expand_dims to y_c for the dimensions of X_c and y_c to fit.
+
+
 
 # We know that the petal length corresponds to the third column in the data
 # matrix (see attributeNames), and therefore our new y variable is:
@@ -75,16 +77,38 @@ attributeNames_r = np.concatenate((attributeNames_c[[0, 1, 3]], classNames),
                                   axis=0)
 
 # Lastly, we update M, since we now have more attributes:
+print("mario")
+print("mario")
+print("mario")
+print(M)
+print(N)
 N,M = X_r.shape
+print(M)
+print(N)
 
 # A relevant figure for this regression problem could
 # for instance be one that shows how the target, that is the petal length,
 # changes with one of the predictors in X:
-i = 2  
-plt.title('Iris regression problem')
-plt.plot(X_r[:, i], y_r, 'o')
-plt.xlabel(attributeNames_r[i]);
-plt.ylabel(targetName_r);
+# i = 2  
+# plt.title('Iris regression problem')
+# plt.plot(X_r[:, i], y_r, 'o')
+# plt.xlabel(attributeNames_r[i]);
+# plt.ylabel(targetName_r);
+# plt.show()
+
+# functions that iterates over all the attributes in X and plots the
+# relationship between the attribute and the target variable:
+def plot_attribute(X, y, attributeNames, targetName):
+    N, M = X.shape
+    for i in range(M):
+        plt.title('Iris regression problem')
+        plt.plot(X[:, i], y, 'o')
+        plt.xlabel(attributeNames[i]);
+        plt.ylabel(targetName);
+        plt.show()
+
+plot_attribute(X_r, y_r, attributeNames_r, targetName_r)
+
 # Consider if you see a relationship between the predictor variable on the
 # x-axis (the variable from X) and the target variable on the y-axis (the
 # variable y). Could you draw a straight line through the data points for
