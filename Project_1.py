@@ -111,7 +111,7 @@ print(rho)
 threshold = 0.9
 
 """ Plot variance explained"""
-plt.figure()
+plt.figure(figsize=(10, 8))
 plt.plot(range(1,len(rho)+1),rho,'x-')
 plt.plot(range(1,len(rho)+1),np.cumsum(rho),'o-')
 plt.plot([1,len(rho)],[threshold, threshold],'k--')
@@ -164,6 +164,7 @@ legendStrs = ['PC'+str(e+1) for e in pcs]
 c = ['r','g','b']
 bw = .2
 r = np.arange(1,M+1)
+plt.figure(figsize=(15, 8))
 for i in pcs:    
     plt.bar(r+i*bw, V[:,i], width=bw)
 plt.xticks(r+bw, column_names)
@@ -173,3 +174,6 @@ plt.legend(legendStrs)
 plt.grid()
 plt.title('NanoNose: PCA Component Coefficients')
 plt.show()
+
+
+### Scatter plot with pc1 pc2 with the points in red if not potable aqua if potable
