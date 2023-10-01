@@ -9,7 +9,7 @@ path_name = "./water_potability.csv"
 df = pd.read_csv(path_name)
 
 # Display the column names
-column_names = df.columns
+column_names = df.columns #oiioisofisofi
 
 # Remove rows with missing values in any column
 df_filtered = df.dropna(how='any')
