@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from matplotlib.pyplot import figure, plot, title, xlabel, ylabel, show, legend
 import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
@@ -89,6 +90,7 @@ plt.show()
 # Step 1: Data Preparation (Optional, but recommended)
 # Standardize the data if necessary (PCA is sensitive to scale)
 X = dataset
+classLabels = X.iloc[:, -1] # Array with all with last column label FOR EVERY ROW usato dopo
 X = X.values
 N,M = X.shape
 
@@ -135,20 +137,24 @@ j = 1
 """i dont like too much this part becaus im missing something this code is not working""" # ex 2.1.4 instead of the scatter of the column
 # 1 and 2 of our dataset i want the scatter of the column pca1 and pca2 of our rotated dataset
 
-# # Plot PCA of the data
-# f = figure()
-# title('NanoNose data: PCA')
-# #Z = array(Z)
-# for c in range(8):
-#     # select indices belonging to class c:
-#     class_mask = y==c
-#     plot(Z[class_mask,i], Z[class_mask,j], 'o', alpha=.5)
-# legend(classNames)
-# xlabel('PC{0}'.format(i+1))
-# ylabel('PC{0}'.format(j+1))
+# Plot PCA of the data
+classNames = sorted(set(classLabels)) # Array with all list of labels (no duplicates)
+classDict = dict(zip(classNames, range(len(classNames))))
+arrayOfPotabilities = np.asarray([classDict[value] for value in classLabels]) # Array with all labels in number format
+NumberOfClasse = len(classNames) # Number of classes
+f = figure()
+title('Scatter on the first 2 PCA components')
+#Z = array(Z)
+for c in range(NumberOfClasse):
+    # select indices belonging to class c:
+    class_mask = arrayOfPotabilities==c
+    plot(Z[class_mask,i], Z[class_mask,j], 'o', alpha=.5)
+legend(classNames)
+xlabel('PC{0}'.format(i+1))
+ylabel('PC{0}'.format(j+1))
 
-# # Output result to screen
-# show()
+# Output result to screen
+show()
 
 column_names = column_names[:]
 # how the Pc are composed by the original dimensions
