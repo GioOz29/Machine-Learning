@@ -39,6 +39,11 @@ plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 plt.title('Distribution of Potablity')
 plt.show()
 
+# Extract features and classification
+X_c = df.drop('Potability', axis=1).values
+Y_c = df['Potability'].values
+attributesN = dataset.columns[:-1]
+
 # Control if the PH values are in range, so if the dataset has correct values
 # ph = dataset.iloc[:, 0]
 # is_in_range = (ph >= 0) & (ph <= 14)
@@ -81,7 +86,7 @@ for column_name, column_data in distribution.items():
 correlation_matrix = dataset.corr()
 
 # Create a heatmap to visualize the correlation matrix
-plt.figure(figsize=(10, 8))
+plt.figure()
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
 plt.title('Correlation Heatmap')
 plt.show()
