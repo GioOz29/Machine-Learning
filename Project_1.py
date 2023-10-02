@@ -40,9 +40,22 @@ plt.title('Distribution of Potablity')
 plt.show()
 
 # Extract features and classification
-X_c = df.drop('Potability', axis=1).values
-Y_c = df['Potability'].values
-attributesN = dataset.columns[:-1]
+X_c = dataset[['ph', 'Organic_carbon']].values  # Select only 'ph' and 'Turbidity' columns
+Y_c = dataset['Potability'].values
+
+# Define valid values for i and j based on your dataset
+i = 0  # Index for 'ph'
+j = 1  # Index for 'Turbidity'
+
+# Define colors for 'Not Potable' and 'Potable'
+colors = ['red' if label == 0 else 'aqua' for label in Y_c]
+
+# Create a scatter plot with custom colors for each class
+plt.title('Water Potability')
+plt.scatter(x=X_c[:, i], y=X_c[:, j], c=colors, s=50, alpha=0.5)
+plt.xlabel('pH')
+plt.ylabel('Organic_carbon')
+plt.show()
 
 # Control if the PH values are in range, so if the dataset has correct values
 # ph = dataset.iloc[:, 0]
