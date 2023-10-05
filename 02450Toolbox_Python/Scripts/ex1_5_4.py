@@ -30,6 +30,7 @@ plt.legend()
 plt.xlabel(attributeNames_c[i])
 plt.ylabel(attributeNames_c[j])
 plt.show()
+
 # Consider, for instance, if it would be possible to make a single line in
 # the plot to delineate any two groups? Can you draw a line between
 # the Setosas and the Versicolors? The Versicolors and the Virginicas?
@@ -83,8 +84,9 @@ N,M = X_r.shape
 i = 2  
 plt.title('Iris regression problem')
 plt.plot(X_r[:, i], y_r, 'o')
-plt.xlabel(attributeNames_r[i]);
-plt.ylabel(targetName_r);
+plt.xlabel(attributeNames_r[i])
+plt.ylabel(targetName_r)
+plt.show()
 # Consider if you see a relationship between the predictor variable on the
 # x-axis (the variable from X) and the target variable on the y-axis (the
 # variable y). Could you draw a straight line through the data points for

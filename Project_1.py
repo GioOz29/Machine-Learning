@@ -39,6 +39,24 @@ plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 plt.title('Distribution of Potablity')
 plt.show()
 
+# Extract features and classification
+X_c = dataset[['ph', 'Organic_carbon']].values  # Select only 'ph' and 'Turbidity' columns
+Y_c = dataset['Potability'].values
+
+# Define valid values for i and j based on your dataset
+i = 0  # Index for 'ph'
+j = 1  # Index for 'Turbidity'
+
+# Define colors for 'Not Potable' and 'Potable'
+colors = ['red' if label == 0 else 'aqua' for label in Y_c]
+
+# Create a scatter plot with custom colors for each class
+plt.title('Water Potability')
+plt.scatter(x=X_c[:, i], y=X_c[:, j], c=colors, s=50, alpha=0.5)
+plt.xlabel('pH')
+plt.ylabel('Organic_carbon')
+plt.show()
+
 # Control if the PH values are in range, so if the dataset has correct values
 # ph = dataset.iloc[:, 0]
 # is_in_range = (ph >= 0) & (ph <= 14)
@@ -81,7 +99,7 @@ for column_name, column_data in distribution.items():
 correlation_matrix = dataset.corr()
 
 # Create a heatmap to visualize the correlation matrix
-plt.figure(figsize=(10, 8))
+plt.figure()
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
 plt.title('Correlation Heatmap')
 plt.show()
