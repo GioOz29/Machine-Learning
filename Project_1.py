@@ -159,7 +159,10 @@ show()
 column_names = column_names[:]
 # how the Pc are composed by the original dimensions
 # pcs = [0,1,2]
-pcs = [0,1,2,3,4,5,6,7]
+# pcs = [0,1,2,3,4,5,6,7,8,9]
+# pcs = [0,1,2]
+# pcs = [3,4,5,6]
+pcs = [7,8,9]
 legendStrs = ['PC'+str(e+1) for e in pcs]
 c = ['r','g','b']
 bw = .2
@@ -168,11 +171,12 @@ plt.figure(figsize=(15, 8))
 for i in pcs:    
     plt.bar(r+i*bw, V[:,i], width=bw)
 plt.xticks(r+bw, column_names)
+plt.xticks(rotation=45)
 plt.xlabel('Attributes')
 plt.ylabel('Component coefficients')
 plt.legend(legendStrs)
 plt.grid()
-plt.title('NanoNose: PCA Component Coefficients')
+plt.title('PCA Component Coefficients')
 plt.show()
 
 
