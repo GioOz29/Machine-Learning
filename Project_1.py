@@ -5,7 +5,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from scipy.linalg import svd
-from sklearn.preprocessing import StandardScaler
+from sklearn import model_selection
+from matplotlib.pylab import (figure, semilogx, loglog, xlabel, ylabel, legend, 
+                           title, subplot, show, grid)
+from toolbox_02450 import rlr_validate
 
 path_name = "./water_potability.csv"
 
@@ -162,7 +165,7 @@ classDict = dict(zip(classNames, range(len(classNames))))
 arrayOfPotabilities = np.asarray([classDict[value] for value in classLabels]) # Array with all labels in number format
 NumberOfClasse = len(classNames) # Number of classes
 f = figure()
-title('Scatter on the first 2 PCA components')
+#title('Scatter on the first 2 PCA components')
 #Z = array(Z)
 # for c in range(NumberOfClasse):
 #     # select indices belonging to class c:
@@ -173,7 +176,7 @@ title('Scatter on the first 2 PCA components')
 # ylabel('PC{0}'.format(j+1))
 
 # Output result to screen
-show()
+#show()
 
 column_names = column_names[:]
 # how the Pc are composed by the original dimensions
@@ -204,16 +207,98 @@ r = np.arange(1,M+1)
 
 
 ## To use Xm for the feature transformation to have 0 mean and standard deviation of 1
-scaler = StandardScaler()
-X_standardized = scaler.fit_transform(Xm)
+# Xm is already standardized before
 
 
-# Assuming you have your standardized dataset in X_standardized
-first_column = X_standardized[:, 0]  # Select the first column
+# Xm = X - np.ones((N,1))*X.mean(axis=0)
+# Xm = Xm*(1/np.std(Xm,0))
+y = Xm[:, 0]
+Xr = Xm[:, 1:]
+N, M = X.shape
 
-# Calculate the mean and variance of the first column
-mean = np.mean(first_column)
-variance = np.var(first_column)
+## Crossvalidation
+# Create crossvalidation partition for evaluation
+K = 10
+CV = model_selection.KFold(K, shuffle=True)
 
-print("Mean of the first column:", mean)
-print("Variance of the first column:", variance)
+# Values of lambda
+lambdas = np.power(10., range(-5, 9))
+
+# Initialize variables
+# T = lens(lambdas)
+Error_train = np.empty((K,1))
+Error_test = np.empty((K,1))
+Error_train_rlr = np.empty((K,1))
+Error_test_rlr = np.empty((K,1))
+Error_train_nofeatures = np.empty((K,1))
+Error_test_nofeatures = np.empty((K,1))
+w_rlr = np.empty((M,K))
+mu = np.empty((K, M-1))
+sigma = np.empty((K, M-1))
+w_noreg = np.empty((M,K))
+
+k=0
+for train_index, test_index in CV.split(Xm,y):
+    
+    # extract training and test set for current CV fold
+    X_train = X[train_index]
+    y_train = y[train_index]
+    X_test = X[test_index]
+    y_test = y[test_index]
+    internal_cross_validation = 10    
+    
+    opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(X_train, y_train, lambdas, internal_cross_validation)
+
+    # Standardize outer fold based on training set, and save the mean and standard
+    # deviations since they're part of the model (they would be needed for
+    # making new predictions) - for brevity we won't always store these in the scripts
+    mu[k, :] = np.mean(X_train[:, 1:], 0)
+    sigma[k, :] = np.std(X_train[:, 1:], 0)
+    
+    X_train[:, 1:] = (X_train[:, 1:] - mu[k, :] ) / sigma[k, :] 
+    X_test[:, 1:] = (X_test[:, 1:] - mu[k, :] ) / sigma[k, :] 
+    
+    Xty = X_train.T @ y_train
+    XtX = X_train.T @ X_train
+    
+    # Compute mean squared error without using the input data at all
+    Error_train_nofeatures[k] = np.square(y_train-y_train.mean()).sum(axis=0)/y_train.shape[0]
+    Error_test_nofeatures[k] = np.square(y_test-y_test.mean()).sum(axis=0)/y_test.shape[0]
+
+    # Estimate weights for the optimal value of lambda, on entire training set
+    lambdaI = opt_lambda * np.eye(M)
+    lambdaI[0,0] = 0 # Do no regularize the bias term
+    w_rlr[:,k] = np.linalg.solve(XtX+lambdaI,Xty).squeeze()
+    # Compute mean squared error with regularization with optimal lambda
+    Error_train_rlr[k] = np.square(y_train-X_train @ w_rlr[:,k]).sum(axis=0)/y_train.shape[0]
+    Error_test_rlr[k] = np.square(y_test-X_test @ w_rlr[:,k]).sum(axis=0)/y_test.shape[0]
+
+    # Estimate weights for unregularized linear regression, on entire training set
+    w_noreg[:,k] = np.linalg.solve(XtX,Xty).squeeze()
+    # Compute mean squared error without regularization
+    Error_train[k] = np.square(y_train-X_train @ w_noreg[:,k]).sum(axis=0)/y_train.shape[0]
+    Error_test[k] = np.square(y_test-X_test @ w_noreg[:,k]).sum(axis=0)/y_test.shape[0]
+    # OR ALTERNATIVELY: you can use sklearn.linear_model module for linear regression:
+    #m = lm.LinearRegression().fit(X_train, y_train)
+    #Error_train[k] = np.square(y_train-m.predict(X_train)).sum()/y_train.shape[0]
+    #Error_test[k] = np.square(y_test-m.predict(X_test)).sum()/y_test.shape[0]
+
+    # Display the results for the last cross-validation fold
+    if k == K-1:
+        figure(k, figsize=(12,8))
+        subplot(1,2,1)
+        semilogx(lambdas,mean_w_vs_lambda.T[:,1:],'.-') # Don't plot the bias term
+        xlabel('Regularization factor')
+        ylabel('Mean Coefficient Values')
+        grid()
+        # You can choose to display the legend, but it's omitted for a cleaner 
+        # plot, since there are many attributes
+        #legend(attributeNames[1:], loc='best')
+        
+        subplot(1,2,2)
+        title('Optimal lambda: 1e{0}'.format(np.log10(opt_lambda)))
+        loglog(lambdas,train_err_vs_lambda.T,'b.-',lambdas,test_err_vs_lambda.T,'r.-')
+        xlabel('Regularization factor')
+        ylabel('Squared error (crossvalidation)')
+        legend(['Train error','Validation error'])
+        grid()
