@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from scipy.linalg import svd
+from sklearn.preprocessing import StandardScaler
 
 path_name = "./water_potability.csv"
 
@@ -36,8 +37,8 @@ plt.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%',
 plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
 # Display the pie chart
-plt.title('Distribution of Potablity')
-plt.show()
+# plt.title('Distribution of Potablity')
+# plt.show()
 
 # Extract features and classification
 X_c = dataset[['ph', 'Organic_carbon']].values  # Select only 'ph' and 'Turbidity' columns
@@ -51,11 +52,11 @@ j = 1  # Index for 'Turbidity'
 colors = ['red' if label == 0 else 'aqua' for label in Y_c]
 
 # Create a scatter plot with custom colors for each class
-plt.title('Water Potability')
-plt.scatter(x=X_c[:, i], y=X_c[:, j], c=colors, s=50, alpha=0.5)
-plt.xlabel('pH')
-plt.ylabel('Organic_carbon')
-plt.show()
+# plt.title('Water Potability')
+# plt.scatter(x=X_c[:, i], y=X_c[:, j], c=colors, s=50, alpha=0.5)
+# plt.xlabel('pH')
+# plt.ylabel('Organic_carbon')
+# plt.show()
 
 # Control if the PH values are in range, so if the dataset has correct values
 # ph = dataset.iloc[:, 0]
@@ -76,33 +77,33 @@ plt.show()
 distribution = dataset.iloc[:, :-1]
 
 # Step 2: Plot histograms and test for normality
-for column_name, column_data in distribution.items():
-    plt.figure(figsize=(6, 4))
-    plt.hist(column_data, bins=20, edgecolor='k')
-    plt.title(f'Distribution of {column_name}')
-    plt.xlabel(column_name)
-    plt.ylabel('Frequency')
+# for column_name, column_data in distribution.items():
+#     plt.figure(figsize=(6, 4))
+#     plt.hist(column_data, bins=20, edgecolor='k')
+#     plt.title(f'Distribution of {column_name}')
+#     plt.xlabel(column_name)
+#     plt.ylabel('Frequency')
 
-    # Step 3: Test for normality using the Shapiro-Wilk test
-    _, p_value = stats.shapiro(column_data)
-    alpha = 0.05  # Significance level
-    is_normal = p_value > alpha
+#     # Step 3: Test for normality using the Shapiro-Wilk test
+#     _, p_value = stats.shapiro(column_data)
+#     alpha = 0.05  # Significance level
+#     is_normal = p_value > alpha
 
-    if is_normal:
-        print(f"{column_name} is normally distributed")
-    else:
-        print(f"{column_name} is not normally distributed")
+#     if is_normal:
+#         print(f"{column_name} is normally distributed")
+#     else:
+#         print(f"{column_name} is not normally distributed")
 
-    plt.show()
+#     plt.show()
 
 # Calculate the correlation matrix
 correlation_matrix = dataset.corr()
 
 # Create a heatmap to visualize the correlation matrix
-plt.figure()
-sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
-plt.title('Correlation Heatmap')
-plt.show()
+# plt.figure()
+# sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f", linewidths=0.5)
+# plt.title('Correlation Heatmap')
+# plt.show()
 
 
 # Step 1: Data Preparation (Optional, but recommended)
@@ -123,22 +124,22 @@ U,S,Vh = svd(Xm,full_matrices=False)
 """Compute variance explained by principal components"""
 rho = (S*S) / (S*S).sum() # We are looking at the variance per each value (subset of 1 component)
 
-print(rho)
+# print(rho)
 
 
 threshold = 0.9
 
 """ Plot variance explained"""
-plt.figure(figsize=(10, 8))
-plt.plot(range(1,len(rho)+1),rho,'x-')
-plt.plot(range(1,len(rho)+1),np.cumsum(rho),'o-')
-plt.plot([1,len(rho)],[threshold, threshold],'k--')
-plt.title('Variance explained by principal components');
-plt.xlabel('Principal component');
-plt.ylabel('Variance explained');
-plt.legend(['Individual','Cumulative','Threshold'])
-plt.grid()
-plt.show()
+# plt.figure(figsize=(10, 8))
+# plt.plot(range(1,len(rho)+1),rho,'x-')
+# plt.plot(range(1,len(rho)+1),np.cumsum(rho),'o-')
+# plt.plot([1,len(rho)],[threshold, threshold],'k--')
+# plt.title('Variance explained by principal components');
+# plt.xlabel('Principal component');
+# plt.ylabel('Variance explained');
+# plt.legend(['Individual','Cumulative','Threshold'])
+# plt.grid()
+# plt.show()
 
 
 """projecting the centeere data on the principal components
@@ -163,13 +164,13 @@ NumberOfClasse = len(classNames) # Number of classes
 f = figure()
 title('Scatter on the first 2 PCA components')
 #Z = array(Z)
-for c in range(NumberOfClasse):
-    # select indices belonging to class c:
-    class_mask = arrayOfPotabilities==c
-    plot(Z[class_mask,i], Z[class_mask,j], 'o', alpha=.5)
-legend(classNames)
-xlabel('PC{0}'.format(i+1))
-ylabel('PC{0}'.format(j+1))
+# for c in range(NumberOfClasse):
+#     # select indices belonging to class c:
+#     class_mask = arrayOfPotabilities==c
+#     plot(Z[class_mask,i], Z[class_mask,j], 'o', alpha=.5)
+# legend(classNames)
+# xlabel('PC{0}'.format(i+1))
+# ylabel('PC{0}'.format(j+1))
 
 # Output result to screen
 show()
@@ -185,17 +186,23 @@ legendStrs = ['PC'+str(e+1) for e in pcs]
 c = ['r','g','b']
 bw = .2
 r = np.arange(1,M+1)
-plt.figure(figsize=(15, 8))
-for i in pcs:    
-    plt.bar(r+i*bw, V[:,i], width=bw)
-plt.xticks(r+bw, column_names)
-plt.xticks(rotation=45)
-plt.xlabel('Attributes')
-plt.ylabel('Component coefficients')
-plt.legend(legendStrs)
-plt.grid()
-plt.title('PCA Component Coefficients')
-plt.show()
+# plt.figure(figsize=(15, 8))
+# for i in pcs:    
+#     plt.bar(r+i*bw, V[:,i], width=bw)
+# plt.xticks(r+bw, column_names)
+# plt.xticks(rotation=45)
+# plt.xlabel('Attributes')
+# plt.ylabel('Component coefficients')
+# plt.legend(legendStrs)
+# plt.grid()
+# plt.title('PCA Component Coefficients')
+# plt.show()
 
 
 ### Scatter plot with pc1 pc2 with the points in red if not potable aqua if potable
+
+
+
+## To use Xm for the feature transformation to have 0 mean and standard deviation of 1
+scaler = StandardScaler()
+X_standardized = scaler.fit_transform(Xm)
