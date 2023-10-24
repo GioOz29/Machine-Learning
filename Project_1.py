@@ -206,3 +206,14 @@ r = np.arange(1,M+1)
 ## To use Xm for the feature transformation to have 0 mean and standard deviation of 1
 scaler = StandardScaler()
 X_standardized = scaler.fit_transform(Xm)
+
+
+# Assuming you have your standardized dataset in X_standardized
+first_column = X_standardized[:, 0]  # Select the first column
+
+# Calculate the mean and variance of the first column
+mean = np.mean(first_column)
+variance = np.var(first_column)
+
+print("Mean of the first column:", mean)
+print("Variance of the first column:", variance)
