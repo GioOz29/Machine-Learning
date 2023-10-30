@@ -5,12 +5,13 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from scipy import stats
 from scipy.linalg import svd
-from sklearn import model_selection
+from sklearn.linear_model import Ridge, Lasso
+from sklearn.model_selection import KFold, cross_val_score
 from matplotlib.pylab import (figure, semilogx, loglog, xlabel, ylabel, legend, 
                            title, subplot, show, grid)
-from toolbox_02450 import rlr_validate
 
-path_name = "./water_potability.csv"
+
+path_name = "Machine-Learning/water_potability.csv"
 
 # Read the CSV file into a DataFrame
 df = pd.read_csv(path_name)
@@ -35,9 +36,9 @@ sizes = [count_0, count_1]
 colors = ['red', 'aqua']
 explode = (0.1, 0)  # Explode the '0' slice for emphasis
 
-plt.figure(figsize=(6, 6))
-plt.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140)
-plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+# plt.figure(figsize=(6, 6))
+# plt.pie(sizes, explode=explode, labels=labels, colors=colors, autopct='%1.1f%%', startangle=140)
+# plt.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
 
 # Display the pie chart
 # plt.title('Distribution of Potablity')
@@ -214,91 +215,21 @@ r = np.arange(1,M+1)
 # Xm = Xm*(1/np.std(Xm,0))
 y = Xm[:, 0]
 Xr = Xm[:, 1:]
-N, M = X.shape
+results = []
+lambda_values = [1, 10, 50, 100, 1000, 1100]
 
-## Crossvalidation
-# Create crossvalidation partition for evaluation
-K = 10
-CV = model_selection.KFold(K, shuffle=True)
+for lambda_val in lambda_values:
+    model = Ridge(alpha=lambda_val)  # Create a Ridge regression model with the current λ value
+    #model = Lasso(alpha=lambda_val) 
+    kfold = KFold(n_splits=10, shuffle=True, random_state=42)  # 10-fold cross-validation
+    scores = cross_val_score(model, Xr, y, cv=kfold, scoring='neg_mean_squared_error')  # gen error
+    mean_error = -scores.mean()  # Calculate the mean error (make it positive)
+    results.append(mean_error)
 
-# Values of lambda
-lambdas = np.power(10., range(-5, 9))
-
-# Initialize variables
-# T = lens(lambdas)
-Error_train = np.empty((K,1))
-Error_test = np.empty((K,1))
-Error_train_rlr = np.empty((K,1))
-Error_test_rlr = np.empty((K,1))
-Error_train_nofeatures = np.empty((K,1))
-Error_test_nofeatures = np.empty((K,1))
-w_rlr = np.empty((M,K))
-mu = np.empty((K, M-1))
-sigma = np.empty((K, M-1))
-w_noreg = np.empty((M,K))
-
-k=0
-for train_index, test_index in CV.split(Xm,y):
-    
-    # extract training and test set for current CV fold
-    X_train = X[train_index]
-    y_train = y[train_index]
-    X_test = X[test_index]
-    y_test = y[test_index]
-    internal_cross_validation = 10    
-    
-    opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(X_train, y_train, lambdas, internal_cross_validation)
-
-    # Standardize outer fold based on training set, and save the mean and standard
-    # deviations since they're part of the model (they would be needed for
-    # making new predictions) - for brevity we won't always store these in the scripts
-    mu[k, :] = np.mean(X_train[:, 1:], 0)
-    sigma[k, :] = np.std(X_train[:, 1:], 0)
-    
-    X_train[:, 1:] = (X_train[:, 1:] - mu[k, :] ) / sigma[k, :] 
-    X_test[:, 1:] = (X_test[:, 1:] - mu[k, :] ) / sigma[k, :] 
-    
-    Xty = X_train.T @ y_train
-    XtX = X_train.T @ X_train
-    
-    # Compute mean squared error without using the input data at all
-    Error_train_nofeatures[k] = np.square(y_train-y_train.mean()).sum(axis=0)/y_train.shape[0]
-    Error_test_nofeatures[k] = np.square(y_test-y_test.mean()).sum(axis=0)/y_test.shape[0]
-
-    # Estimate weights for the optimal value of lambda, on entire training set
-    lambdaI = opt_lambda * np.eye(M)
-    lambdaI[0,0] = 0 # Do no regularize the bias term
-    w_rlr[:,k] = np.linalg.solve(XtX+lambdaI,Xty).squeeze()
-    # Compute mean squared error with regularization with optimal lambda
-    Error_train_rlr[k] = np.square(y_train-X_train @ w_rlr[:,k]).sum(axis=0)/y_train.shape[0]
-    Error_test_rlr[k] = np.square(y_test-X_test @ w_rlr[:,k]).sum(axis=0)/y_test.shape[0]
-
-    # Estimate weights for unregularized linear regression, on entire training set
-    w_noreg[:,k] = np.linalg.solve(XtX,Xty).squeeze()
-    # Compute mean squared error without regularization
-    Error_train[k] = np.square(y_train-X_train @ w_noreg[:,k]).sum(axis=0)/y_train.shape[0]
-    Error_test[k] = np.square(y_test-X_test @ w_noreg[:,k]).sum(axis=0)/y_test.shape[0]
-    # OR ALTERNATIVELY: you can use sklearn.linear_model module for linear regression:
-    #m = lm.LinearRegression().fit(X_train, y_train)
-    #Error_train[k] = np.square(y_train-m.predict(X_train)).sum()/y_train.shape[0]
-    #Error_test[k] = np.square(y_test-m.predict(X_test)).sum()/y_test.shape[0]
-
-    # Display the results for the last cross-validation fold
-    if k == K-1:
-        figure(k, figsize=(12,8))
-        subplot(1,2,1)
-        semilogx(lambdas,mean_w_vs_lambda.T[:,1:],'.-') # Don't plot the bias term
-        xlabel('Regularization factor')
-        ylabel('Mean Coefficient Values')
-        grid()
-        # You can choose to display the legend, but it's omitted for a cleaner 
-        # plot, since there are many attributes
-        #legend(attributeNames[1:], loc='best')
-        
-        subplot(1,2,2)
-        title('Optimal lambda: 1e{0}'.format(np.log10(opt_lambda)))
-        loglog(lambdas,train_err_vs_lambda.T,'b.-',lambdas,test_err_vs_lambda.T,'r.-')
-        xlabel('Regularization factor')
-        ylabel('Squared error (crossvalidation)')
-        legend(['Train error','Validation error'])
-        grid()
+plt.plot(lambda_values, results, marker='o')
+plt.xlabel('Lambda (Regularization Strength)')
+plt.ylabel('Generalization Error')
+plt.xscale('log')  # Since λ values are typically on a logarithmic scale
+plt.title('Generalization Error vs. Lambda')
+plt.grid(True)
+plt.show()
