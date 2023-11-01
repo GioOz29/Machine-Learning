@@ -1,11 +1,8 @@
 import pandas as pd
 import numpy as np
-from matplotlib.pyplot import figure, plot, title, xlabel, ylabel, show, legend
 import matplotlib.pyplot as plt
-from sklearn.linear_model import Ridge, Lasso
+from sklearn.linear_model import Ridge # L2 is used, but is also possible to use L1 = Lasso
 from sklearn.model_selection import KFold, cross_val_score
-from matplotlib.pylab import (figure, semilogx, loglog, xlabel, ylabel, legend, 
-                           title, subplot, show, grid)
 
 
 path_name = "./water_potability.csv"
