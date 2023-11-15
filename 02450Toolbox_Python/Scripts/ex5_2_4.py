@@ -20,6 +20,8 @@ model.fit(X,y)
 y_est = model.predict(X)
 residual = y_est-y
 
+coefficients = model.predict(np.ones(X.shape[1]).reshape(1,-1))
+
 # Display scatter plot
 figure()
 subplot(2,1,1)
@@ -29,5 +31,6 @@ subplot(2,1,2)
 hist(residual,40)
 
 show()
-
+# print("Coefficients: ", model.coef_)
+print("Coefficients: ", coefficients)
 print('Ran Exercise 5.2.4')

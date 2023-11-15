@@ -8,7 +8,7 @@ from toolbox_02450 import train_neural_net, draw_neural_net
 from scipy import stats
 
 # Load Matlab data file and extract variables of interest
-mat_data = loadmat('../Data/wine2.mat')
+mat_data = loadmat('02450Toolbox_Python/Data/wine2.mat')
 attributeNames = [name[0] for name in mat_data['attributeNames'][0]]
 X = mat_data['X']
 y = X[:,[10]]             # alcohol contents (target)
@@ -26,13 +26,15 @@ if do_pca_preprocessing:
     U,S,V = np.linalg.svd(Y,full_matrices=False)
     V = V.T
     #Components to be included as features
-    k_pca = 3
+    # k_pca = 3
+    k_pca = 7
     X = X @ V[:,:k_pca]
     N, M = X.shape
 
 
 # Parameters for neural network classifier
-n_hidden_units = 2      # number of hidden units
+# n_hidden_units = 2      # number of hidden units
+n_hidden_units = 5      # number of hidden units
 n_replicates = 1        # number of networks trained in each k-fold
 max_iter = 10000
 

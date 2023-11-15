@@ -6,7 +6,7 @@ import sklearn.linear_model as lm
 
 # Parameters
 Kd = 5  # no of terms for data generator
-Km = 3  # no of terms for regression model
+Km = 7  # no of terms for regression model
 N = 50  # no of data objects to train a model
 Xe =  np.linspace(-2,2,1000).reshape(-1,1) # X values to visualize true data and model
 eps_mean, eps_std = 0, 0.5          # noise parameters
@@ -26,7 +26,8 @@ y_true = w[0] + Xde @ w[1:]
 
 
 # Fit ordinary least squares regression model
-Xm = np.power(X, range(1,Km+1))
+Xm = np.power(X, range(1,Km+1)) # Model data matrix with more variables than the original one has non linear terms
+#Xm is bigger in size than X
 model = lm.LinearRegression()
 model = model.fit(Xm,y)
 

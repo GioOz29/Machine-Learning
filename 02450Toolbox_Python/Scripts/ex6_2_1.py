@@ -7,7 +7,7 @@ from toolbox_02450 import feature_selector_lr, bmplot
 import numpy as np
 
 # Load data from matlab file
-mat_data = loadmat('../Data/body.mat')
+mat_data = loadmat('02450Toolbox_Python/Data/body.mat')
 X = mat_data['X']
 y = mat_data['y'].squeeze()
 attributeNames = [name[0] for name in mat_data['attributeNames'][0]]

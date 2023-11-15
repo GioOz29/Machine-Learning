@@ -7,7 +7,7 @@ from scipy.io import loadmat
 workingDir = os.getcwd()
 print("Running from: " + workingDir)
 
-mat_data = loadmat('../Data/wine.mat')
+mat_data = loadmat('02450Toolbox_Python/Data/wine.mat')
 X = mat_data['X']
 y = mat_data['y'].astype(int).squeeze()
 C = mat_data['C'][0,0]
@@ -29,4 +29,5 @@ attributeNames = attributeNames[0:11]
 # Update N and M
 N, M = X.shape
 
+print(N,M)
 print('Ran Exercise 5.1.5')

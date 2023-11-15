@@ -8,7 +8,7 @@ import sklearn.linear_model as lm
 from sklearn import model_selection
 from toolbox_02450 import rlr_validate
 
-mat_data = loadmat('../Data/body.mat')
+mat_data = loadmat('02450Toolbox_Python/Data/body.mat')
 X = mat_data['X']
 y = mat_data['y'].squeeze()
 attributeNames = [name[0] for name in mat_data['attributeNames'][0]]

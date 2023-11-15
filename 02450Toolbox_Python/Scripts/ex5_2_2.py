@@ -15,7 +15,7 @@ y = w0 + w1*X + eps
 y_true = y - eps
 
 # Fit ordinary least squares regression model
-model = lm.LinearRegression(fit_intercept=True)
+model = lm.LinearRegression(fit_intercept=True) #no nead of fit interceptor if you add the column of 1 to your X
 model = model.fit(X,y)
 # Compute model output:
 y_est = model.predict(X)
