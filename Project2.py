@@ -123,6 +123,8 @@ for train_index, test_index in CV.split(X,y):
     
     opt_val_err, opt_lambda, mean_w_vs_lambda, train_err_vs_lambda, test_err_vs_lambda = rlr_validate(X_train, y_train, lambdas, internal_cross_validation)
 
+
+    print(demo_logreg.coef_)
     # Standardize outer fold based on training set, and save the mean and standard
     # deviations since they're part of the model (they would be needed for
     # making new predictions) - for brevity we won't always store these in the scripts
